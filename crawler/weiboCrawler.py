@@ -12,13 +12,13 @@ import socket
 import json
 
 #connect db
-db = MySQLdb.connect(host="localhost", user="houyf", passwd="Beyond", db="weibo")
+db = MySQLdb.connect(host="localhost", user="houyf", passwd="Beyond", db="xinan")
 cursor = db.cursor()
 cursor.execute('set names "utf8"')
 
 #config
 socket.setdefaulttimeout(10.0)
-FP_COOKIE = open("/home/houyf/python/wCrawler/cookies.txt","r")
+FP_COOKIE = open("/home/houyf/WUser/crawler/cookies.txt","r")
 ARGS_COOKIE = FP_COOKIE.readline()
 FP_COOKIE.close()
 MY_UID = "3170483413";
@@ -122,22 +122,25 @@ def GetAccountId(uid) :
 
 
 #read user from database
-cursor.execute("select id, account_id, domain from user where isFetch = 0")
+cursor.execute("select user_id, domain from users where is_fetch = 0")
 userTable = cursor.fetchall()
 for row in userTable:
     #each user, accountID is needed
     tmpUser = User()
     tmpUser.id = str(row[0])
-    tmpUser.accountID = str(row[1])
-    tmpUser.domain = str(row[2])
+    tmpUser.domain = str(row[1])
+    # print tmpUser.id
+    # print tmpUser.domain
+    tmpUser.accountID = tmpUser.domain + tmpUser.id
 
-    if tmpUser.accountID == "0":
+    if tmpUser.domain == "0":
         time.sleep(2)
-        print '[info]User: ' + tmpUser.id + 'has no accountID. Get it now'
+        print '[info]User: ' + tmpUser.id + 'has no domain. Get it now'
         FOLLOW_INIT_PATH = "http://weibo.com/u/" + tmpUser.id
         rawcontents = fetchUrl(FOLLOW_INIT_PATH)
         tmpUser.accountID = GetAccountId(tmpUser.id);
         if(not tmpUser.accountID.isdigit()):
+            # print tmpUser.accountID
             print 're has some problem'
             continue
         tmpUser.domain = str(tmpUser.accountID)[0:6]
@@ -146,7 +149,7 @@ for row in userTable:
             continue
         # save the  accountID
         try :
-            sql = "update user " + "set account_id = " + str(tmpUser.accountID) + " where id = " + str(tmpUser.id) ;
+            sql = "update users " + "set domain = " + str(tmpUser.domain) + " where user_id = " + str(tmpUser.id) ;
             print sql
             tmp = cursor.execute(sql);
             db.commit()
@@ -184,7 +187,7 @@ for row in userTable:
     #update db
     print '[info]Fetch end. Total fetch: ' + str(len(allWeiboList))
     for eachWeibo in allWeiboList:
-        sql = "insert into weibo values(%s,%s,%s,%s)"
+        sql = "insert into post values(%s,%s,%s,%s)"
         try:
             cursor.execute(sql, [eachWeibo.weiboID, eachWeibo.uid, eachWeibo.content, eachWeibo.pubTime])
         except Exception,data:
@@ -192,7 +195,7 @@ for row in userTable:
             print '[error]insert weibo fail'
             continue
 
-    sql = "update user set isFetch = 1 where id = " + eachUser.id
+    sql = "update users set is_fetch = 1, domain = " + eachUser.domain + " where user_id = " + eachUser.id
     cursor.execute(sql)
     db.commit()
 

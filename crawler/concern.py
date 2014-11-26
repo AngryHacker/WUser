@@ -14,7 +14,7 @@ import json
 
 #config
 socket.setdefaulttimeout(10.0)
-FP_COOKIE = open("/home/houyf/python/wCrawler/cookies.txt","r")
+FP_COOKIE = open("/home/houyf/WUser/crawler/cookies.txt","r")
 ARGS_COOKIE = FP_COOKIE.readline()
 FP_COOKIE.close()
 MY_UID = "3170483413";
@@ -49,7 +49,10 @@ def getConcernByHtml(html):
     left = html.find('{')
     right = html.find('}',len(html) - 100) + 1
     html = html[left:right]
-    jsonData  = json.loads(html)
+    try:
+        jsonData  = json.loads(html)
+    except:
+        return {}
     html = jsonData['html']
     filter = {'\\r\\n':'\r\n', '\\t':'\t','\\/': '/', '\\"':'"' }
     for key in filter.keys():
@@ -66,15 +69,15 @@ def getConcernByHtml(html):
         id = str[0].split('=')[1]
         name = str[1].split('=')[1]
         concern[id] = name
-
-    #filter which related to SUN YAT-SEN
-    users = {}
-    for id in concern:
-        if(concern[id].find('中大') >= 0):
-            users[id] = concern[id]
-        elif (concern[id].find('中山大学')>= 0):
-            users[id] = concern[id]
-    return users
+    return concern
+    # filter which related to SUN YAT-SEN
+    # users = {}
+    # for id in concern:
+        # if(concern[id].find('中大') >= 0):
+            # users[id] = concern[id]
+        # elif (concern[id].find('中山大学')>= 0):
+            # users[id] = concern[id]
+    # return users
 
 def getConcernByUid(uid):
 
@@ -86,8 +89,46 @@ def getConcernByUid(uid):
         &ajaxpagelet=1 \
         &pids=Pl_Official_HisRelation__' + getPids(html) + '&page='
     users = {}
-    for page in xrange(1,10):
-        html = fetchUrl(concern_url + str(page) )
+    count = 0
+    for page in xrange(1,2):
+        html = fetchUrl(concern_url + str(page))
+        if(html == '') :
+            if(count == 2) :
+                return users
+            count += 1
+            continue
         concern = getConcernByHtml(html)
         users.update(concern)
     return users
+
+
+def insert_user(user_id, nickname, cursor):
+    try:
+        sql = 'insert into users(`user_id`, `nickname`) values(%s, "%s")' % (str(user_id), str(nickname))
+        cursor.execute(sql)
+    except:
+        print sys.exc_info()
+    db.commit()
+
+def insert_fans(user1, user2, cursor):
+    try:
+        sql = 'insert into fans(`user1`, `user2`) values(%s, %s)' %(str(user1), str(user2))
+        cursor.execute(sql)
+    except:
+        print sys.exc_info()
+    db.commit()
+
+
+if(__name__ == '__main__'):
+    user_id = "1705586121"
+    users = getConcernByUid(user_id)
+    db = MySQLdb.connect(host='localhost', user='houyf', passwd='Beyond', db='xinan')
+    cursor = db.cursor()
+    cursor.execute('set names utf8')
+
+    for i in users :
+        # insert_user(i, users[i], cursor)
+        insert_fans(i, user_id, cursor)
+    cursor.close()
+    db.close()
+
