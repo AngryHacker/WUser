@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.40, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.37, for debian-linux-gnu (i686)
 --
 -- Host: localhost    Database: xinan
 -- ------------------------------------------------------
--- Server version	5.5.40-0ubuntu0.14.04.1
+-- Server version	5.5.37-0ubuntu0.14.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,16 +15,16 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+drop database if exists `xinan`;
+
+create database `xinan`
+	default character set utf8
+	default collate utf8_general_ci;
+
+use xinan;
 --
 -- Table structure for table `fans`
 --
-
-drop database if exists `xinan`;
-
-create database `xinan` 
-    default character set utf8 
-    default collate utf8_general_ci;
-use `xinan`;
 
 DROP TABLE IF EXISTS `fans`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -90,7 +90,7 @@ CREATE TABLE `users` (
   `nickname` varchar(128) NOT NULL COMMENT '微博昵称',
   `domain` varchar(10) NOT NULL DEFAULT '0' COMMENT '用户所在域',
   `is_fetch` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已抓取',
-  `is_evil` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否恶意用户',
+  `is_evil` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否恶意用户,0-未分类,1-恶意用户,2-普通用户',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微博用户';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -104,6 +104,29 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES (1197354837,'左小青','0',0,0),(1276314124,'杨坤','0',0,0),(1325427361,'刘卓81','0',0,0),(1610536214,'李静','0',0,0),(1686532492,'撒贝宁','0',0,0),(1705586121,'GEM鄧紫棋','0',0,0),(1721787861,'甄小帥','0',0,0),(1732276825,'vivian_陳慧敏','0',0,0),(1736639471,'MR_MJ譚傑明','0',0,0),(1768163082,'猪猪肉丸丸','0',0,0),(1849573462,'Calvin_Au','0',0,0),(2172778340,'AngelChiuManMing','0',0,0),(2247951565,'gordontam','0',0,0),(2424903417,'_______Middle','0',0,0),(2593485204,'SuperGirlsJessica蔡明芳','0',0,0),(2609400635,'TFBOYS-王俊凯','0',0,0),(2812335943,'TFBOYS-王源','0',0,0),(3170483413,'houyf','100505',1,0),(3623353053,'TFBOYS-易烊千玺','0',0,0),(5126387620,'GEM_XXX_LIVE世界巡迴演唱會','0',0,0),(5144760016,'藝能Jason','0',0,0),(5267781194,'她她-TATA','0',0,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `word`
+--
+
+DROP TABLE IF EXISTS `word`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `word` (
+  `w_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `word` varchar(32) NOT NULL COMMENT '词',
+  PRIMARY KEY (`w_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='TF 出来的恶意用户最高词汇表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `word`
+--
+
+LOCK TABLES `word` WRITE;
+/*!40000 ALTER TABLE `word` DISABLE KEYS */;
+/*!40000 ALTER TABLE `word` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -114,4 +137,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-26 17:10:04
+-- Dump completed on 2014-11-27 17:16:54

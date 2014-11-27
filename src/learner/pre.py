@@ -13,13 +13,13 @@ db = MySQLdb.connect(host="localhost", user="ljc", passwd="1", db="xinan")
 cursor = db.cursor()
 cursor.execute('set names "utf8"')
 
-v = dict([])
 
+v = []
 #get data
 cursor.execute("select wid,word from evil_word")
 allWord = cursor.fetchall()
 for eachWord in allWord:
-    v[str(eachWord[0])] = str(eachWord[1])
+    v.append(str(eachWord[1]))
 
 cursor.execute('select user_id,is_evil from users where is_evil != 0')
 allUser = cursor.fetchall()
