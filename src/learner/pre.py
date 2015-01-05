@@ -13,7 +13,6 @@ db = MySQLdb.connect(host="localhost", user="ljc", passwd="1", db="xinan")
 cursor = db.cursor()
 cursor.execute('set names "utf8"')
 
-
 v = []
 #get data
 cursor.execute("select wid,word from evil_word")
