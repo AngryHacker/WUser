@@ -115,6 +115,9 @@ def insert_user(user_id, nickname, cursor):
     try:
         sql = 'insert into users(`user_id`, `nickname`) values(%s, "%s")' % (str(user_id), str(nickname))
         cursor.execute(sql)
+        #默认恶意用户的粉丝也是恶意用户
+        sql = 'update users set is_evil=1 where user_id=%s' %str(user_id)
+        cursor.execute(sql)
     except:
         print '用户%s 已经被抓取了'% str(nickname)
     db.commit()
@@ -142,7 +145,7 @@ if(__name__ == '__main__'):
     #取得每个用户的一定量的粉丝
     for row in msg:
         user_id = row[0]
-        print 'fetch concern of %s now ...' %user_id
+        print 'fetch fans of %s now ...' %user_id
         users = getConcernByUid(user_id)
         for i in users :
             insert_user(i, users[i], cursor)
