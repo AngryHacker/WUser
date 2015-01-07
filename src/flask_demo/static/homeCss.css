@@ -1,0 +1,50 @@
+h1 {
+    font-size: 150% !important;
+}
+h1,h6{
+	overflow:inherit !important;
+	text-shadow: 5px 5px 5px #d0d0d0;
+	color:#F5CD93;
+}
+
+h1 img{
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.cont {
+	border: solid;
+	margin: 1% !important;
+}
+
+.cont li{
+	padding:1%;
+}
+
+.cont li p b{
+	font-size: 120% !important;
+	font-family: Monospace !important;
+}
+
+.opa{
+}
+
+
+.back div{
+	border-width: 150%;
+	margin: 7%;
+	background-repeat:no-repeat;
+	background-position: center;
+	padding: 5%;
+}
+
+.user{
+	margin-top: 5%;
+	font-family: Monospace !important;
+	font-size: 150%;
+}
+.user tr td {
+	overflow:inherit !important;
+	width: auto;
+}
