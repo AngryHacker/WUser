@@ -15,7 +15,7 @@ cursor.execute('set names "utf8"')
 
 v = []
 #get data
-cursor.execute("select wid,word from evil_word")
+cursor.execute("select w_id,word from word")
 allWord = cursor.fetchall()
 for eachWord in allWord:
     v.append(str(eachWord[1]))

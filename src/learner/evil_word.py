@@ -15,7 +15,7 @@ cursor.execute('set names "utf8"')
 
 
 #取所有恶意用户
-cursor.execute('select user_id from users where is_evil == 1')
+cursor.execute('select user_id from users where is_evil = 1')
 allUser = cursor.fetchall()
 
 #记录所有词
@@ -23,7 +23,6 @@ v = dict([])
 word = []
 
 for eachUser in allUser:
-    allX.append([])
     cursor.execute('select content from post where user_id = %s',[str(eachUser[0])])
     allMsg = cursor.fetchall()
     for eachMsg in allMsg:
@@ -56,7 +55,8 @@ i = 0
 for item in v:
     if i == 1000:
         break
-    tmp_word = item[0]
+    tmp_word = word[item[0]]
+    tmp_word = tmp_word.encode('utf-8')
     cursor.execute('insert into word values(null,%s)',[tmp_word])
     db.commit()
     i += 1

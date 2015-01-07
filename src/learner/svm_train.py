@@ -29,6 +29,6 @@ f.close()
 
 #train
 clf = svm.SVC(gamma=0.001, C=100.)
-print clf.fit(x[:100], y[:100])
-#joblib.dump(clf, 'data/svm_m.dat')
-print clf.score(x[100:], y[100:])
+print clf.fit(x[:250], y[:250])
+joblib.dump(clf, 'data/svm_m.dat')
+#print clf.score(x[250:], y[250:])
