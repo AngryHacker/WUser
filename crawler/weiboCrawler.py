@@ -11,17 +11,6 @@ import MySQLdb
 import socket
 import json
 
-#connect db
-db = MySQLdb.connect(host="localhost", user="houyf", passwd="Beyond", db="xinan")
-cursor = db.cursor()
-cursor.execute('set names "utf8"')
-
-#config
-socket.setdefaulttimeout(10.0)
-FP_COOKIE = open("/home/houyf/WUser/crawler/cookies.txt","r")
-ARGS_COOKIE = FP_COOKIE.readline()
-FP_COOKIE.close()
-MY_UID = "3170483413";
 
 #class: User
 class User:
@@ -108,7 +97,6 @@ def getWeiboList(html, uid):
     return weiboList
 
 
-
 def GetAccountId(uid) :
     url = "http://weibo.com/u/" + str(uid)
     html =  fetchUrl(url)
@@ -120,17 +108,24 @@ def GetAccountId(uid) :
     right = html.find("'",left )
     return  html[left:right]
 
-
+#connect db
+db = MySQLdb.connect(host="localhost", user="houyf", passwd="Beyond", db="xinan")
+cursor = db.cursor()
+cursor.execute('set names "utf8"')
+#config
+socket.setdefaulttimeout(10.0)
+FP_COOKIE = open("/home/houyf/WUser/crawler/cookies.txt","r")
+ARGS_COOKIE = FP_COOKIE.readline()
+FP_COOKIE.close()
+MY_UID = "3170483413";
 #read user from database
-cursor.execute("select user_id, domain from users where is_fetch = 0")
+cursor.execute("select user_id, domain from users where is_fetch = 0 and is_evil=0")
 userTable = cursor.fetchall()
 for row in userTable:
     #each user, accountID is needed
     tmpUser = User()
     tmpUser.id = str(row[0])
     tmpUser.domain = str(row[1])
-    # print tmpUser.id
-    # print tmpUser.domain
     tmpUser.accountID = tmpUser.domain + tmpUser.id
 
     if tmpUser.domain == "0":

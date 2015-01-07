@@ -26,8 +26,9 @@ def fetchUrl(url):
         request.add_header('Cookie',ARGS_COOKIE)
         response = urllib2.urlopen(request)
         return response.read()
-    except:
-        print '[error]Fetch html fail'
+    except :
+        # print '[error]Fetch html fail '
+        print sys.exc_info()
         return ''
 
 #存放到文件中
@@ -82,7 +83,7 @@ def getConcernByUid(uid):
         &pids=Pl_Official_HisRelation__' + getPids(html) + '&page='
     users = {}
     count = 0
-    for page in xrange(1,2):
+    for page in xrange(1,20):
         html = fetchUrl(concern_url + str(page))
         if(html == '') :
             if(count == 2) :
@@ -118,7 +119,7 @@ if(__name__ == '__main__'):
     cursor = db.cursor()
     cursor.execute('set names utf8')
     #获取用户列表
-    sql = 'select user_id from users where is_fetch_concern=0'
+    sql = 'select user_id from users where is_fetch_concern=0 and is_evil=0'
     cursor.execute(sql)
     msg = cursor.fetchall()
     for row in msg:
@@ -127,7 +128,7 @@ if(__name__ == '__main__'):
         users = getConcernByUid(user_id)
         for i in users :
             insert_user(i, users[i], cursor)
-            insert_fans(i, user_id, cursor)
+            insert_fans(user_id, i, cursor)
         #标记该用户已经被抓取
         sql = 'update users set is_fetch_concern = 1 where user_id=%s' %user_id
         cursor.execute(sql)

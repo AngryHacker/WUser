@@ -132,6 +132,22 @@ def insert_fans(user1, user2, cursor):
     db.commit()
 
 
+def GetFans(u_id):
+    user_id =
+    for row in msg:
+        user_id = row[0]
+        print 'fetch fans of %s now ...' %user_id
+        users = getConcernByUid(user_id)
+        for i in users :
+            insert_user(i, users[i], cursor)
+            insert_fans(i, user_id, cursor)
+        sql = 'update users set is_fetch_fans = 1 where user_id=%s'% user_id
+        cursor.execute(sql)
+        db.commit()
+    cursor.close()
+    db.close()
+
+
 if(__name__ == '__main__'):
 
     #连接数据库和预处理

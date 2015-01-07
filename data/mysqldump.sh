@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mysqldump -uhouyf -pBeyond > xinan.sql
+mysqldump -uhouyf -pBeyond xinan > xinan.sql
