@@ -15,7 +15,7 @@ cursor.execute('set names "utf8"')
 
 
 #取所有恶意用户
-cursor.execute('select user_id from users where is_evil = 1')
+cursor.execute('select user_id from users where is_evil = 1 limit 0,500')
 allUser = cursor.fetchall()
 
 #记录所有词
@@ -53,9 +53,10 @@ v = sorted(v.iteritems(),key = lambda d:d[1],reverse = True)
 #tf 最高的 1000 个词作为训练特征
 i = 0
 for item in v:
-    if i == 1000:
+    if i == 5000:
         break
     tmp_word = word[item[0]]
+    print tmp_word + ' : ' + str(item[1])
     tmp_word = tmp_word.encode('utf-8')
     cursor.execute('insert into word values(null,%s)',[tmp_word])
     db.commit()

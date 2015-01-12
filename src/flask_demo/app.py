@@ -74,6 +74,7 @@ def getAccountID(html):
 
 #get weibo list from html
 def getWeiboList(html, uid):
+    print 'tring to get weibo...'
     try:
         decodejson = json.loads(html)
         weiboDiv = decodejson['data']
@@ -87,6 +88,7 @@ def getWeiboList(html, uid):
     divList = soup.findAll('div', 'WB_feed_type')
     weiboList = []
     for eachDiv in divList:
+        print 'a little weibo...'
         tmpWeibo = Weibo()
         tmpWeibo.uid = uid
         #get mid first
@@ -188,12 +190,12 @@ def demo():
             #成功则用这些微博进行分类
             is_evil = svm_predict(res)
 
-            if is_evil == 2:
+            if is_evil == '1':
                 #如果是恶意用户
-                master_info['evil'] = 0
+                master_info['evil'] = 1
             else:
                 #如果不是
-                master_info['evil'] = 1
+                master_info['evil'] = 0
 
             master_info['name'] = 'success'
 
@@ -221,7 +223,7 @@ def svm_predict(allMsg):
 
     #get data
     print 'loading vocabulary...'
-    cursor.execute("select w_id,word from word limit 0,1000")
+    cursor.execute("select w_id,word from word limit 0,5000")
     allWord = cursor.fetchall()
     for eachWord in allWord:
         v.append(str(eachWord[1]))
@@ -232,7 +234,6 @@ def svm_predict(allMsg):
     print 'load model...'
     clf = joblib.load('data/svm_m.dat')
 
-    total = 0
     x = [0 for i in range(0, vLen)]
     print 'loading  row data...'
     for eachMsg in allMsg:
@@ -248,12 +249,11 @@ def svm_predict(allMsg):
             if len(tmp_word) == 0 or tmp_flag != 'n':
                 continue
             else:
-                total += 1
                 if tmp_word not in v:
                     continue
                 else:
                     x[v.index(tmp_word)] += 1
-    x = [rate*1.0/(total+1) for rate in x]
+    #x = [rate*1.0/(total+1) for rate in x]
     #使用之前的模型进行学习
     new_class =  clf.predict(x)
     return new_class[0]

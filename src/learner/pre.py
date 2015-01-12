@@ -15,7 +15,7 @@ cursor.execute('set names "utf8"')
 
 v = []
 #get data
-cursor.execute("select w_id,word from word")
+cursor.execute("select w_id,word from word limit 0,5000")
 allWord = cursor.fetchall()
 for eachWord in allWord:
     v.append(str(eachWord[1]))
@@ -77,7 +77,7 @@ for eachUser in allX:
 	tmp = [0 for x in range(0, vLen)]
 	for eachWord in eachUser:
 		tmp[eachWord] += 1
-	tmp = [x*1.0/(allWordCount[i]+1) for x in tmp]
+	#tmp = [x*1.0/(allWordCount[i]+1) for x in tmp]
 	allX[i] = ' '.join(str(c) for c in tmp)
     #文章数++
 	i += 1
