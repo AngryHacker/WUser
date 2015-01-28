@@ -174,6 +174,7 @@ def hello():
 @app.route('/demo', methods=['GET', 'POST'])
 def demo():
     if request.method == 'POST':
+        master_info['name'] = 'haha'
         master_info = dict()
         master_info['evil'] = 1
 
@@ -199,10 +200,13 @@ def demo():
 
             master_info['name'] = 'success'
 
+        #master_info['evil'] = 0
+        #master_info['name'] = '月光下的Song'
         if master_info['evil'] == 1:
             return render_template('demo.html',master_info = master_info)
         else:
-            fan_info = ['user1','user2']
+            #fan_info = ['夏目石童','嗨皮大哥','媛涵幸福庭']
+            fan_info = []
             if len(fan_info) == 0:
                 return render_template('demo.html',master_info = master_info)
             else:

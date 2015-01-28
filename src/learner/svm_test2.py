@@ -77,8 +77,10 @@ for eachUser in allUser:
     #cursor.execute("update users set is_evil=%s where user_id=%s", (str(new_class[0]), int(eachMsg[0])))
     #db.commit()
 
+rate = right*1.0/total*100
 print 'total:'+str(total)
 print 'right:'+str(right)
+print 'The rate is:' + str(rate) + '%'
 #close db
 cursor.close()
 db.close()
